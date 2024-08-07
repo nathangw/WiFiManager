@@ -1,6 +1,8 @@
 
 # WiFiManager
 
+In this fork I added encryption to the firmware upload feature to protect the code in production.
+
 Espressif ESPx WiFi Connection manager with fallback web configuration portal
 
 :warning: This Documentation is out of date, see notes below
