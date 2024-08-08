@@ -28,6 +28,7 @@ WiFiManagerParameter::WiFiManagerParameter() {
   WiFiManagerParameter("");
 }
 
+
 WiFiManagerParameter::WiFiManagerParameter(const char *custom) {
   _id             = NULL;
   _label          = NULL;
@@ -2422,7 +2423,6 @@ void WiFiManager::handleNotFound() {
  * Return true in that case so the page handler do not try to handle the request again. 
  */
 boolean WiFiManager::captivePortal() {
-  
   if(!_enableCaptivePortal || !configPortalActive) return false; // skip redirections if cp not enabled or not in ap mode
   
   String serverLoc =  toStringIp(server->client().localIP());
@@ -3296,6 +3296,21 @@ void WiFiManager::setHttpPort(uint16_t port){
 }
 
 
+
+/**
+ * setOTAEncryption
+ * @param uint18_t 32 byte encryption key, address of code from partition
+ */
+void WiFiManager::setOTAEncryption(const uint8_t* key, uint32_t address){
+  memcpy(_ota_key,key,32);
+  _ota_address = address;
+}
+
+
+
+
+
+
 bool WiFiManager::preloadWiFi(String ssid, String pass){
   _defaultssid = ssid;
   _defaultpass = pass;
@@ -3938,12 +3953,32 @@ void WiFiManager::handleUpdating(){
     // });
 
   	if (!Update.begin(maxSketchSpace)) { // start with max available size
+      #ifdef WM_DEBUG_LEVEL
+      DEBUG_WM(WM_DEBUG_ERROR,F("[ERROR] OTA Update begin ERROR"), Update.getError());
+      #endif
+      error = true;
+      Update.end(); // Not sure the best way to abort, I think client will keep sending..
+  	} 
+
+
+    bool requirecrypt = false;   //check to force encryption requirement on all updates
+    for (int i = 0; i < 32; i++){  //check if the encryption key has been set
+      if (_ota_key[i] != 0){
+        requirecrypt = true;
+        exit;
+      }
+    }
+
+    if (requirecrypt) {
+      if (!Update.setupCrypt(_ota_key, _ota_address, 0x0f, U_AES_DECRYPT_ON)) {
         #ifdef WM_DEBUG_LEVEL
-        DEBUG_WM(WM_DEBUG_ERROR,F("[ERROR] OTA Update ERROR"), Update.getError());
+        DEBUG_WM(WM_DEBUG_ERROR,F("[ERROR] OTA Update setupCrypt ERROR"), Update.getError());
         #endif
         error = true;
-        Update.end(); // Not sure the best way to abort, I think client will keep sending..
-  	}
+      } 
+    }
+    
+
 	}
   // UPLOAD WRITE
   else if (upload.status == UPLOAD_FILE_WRITE) {
