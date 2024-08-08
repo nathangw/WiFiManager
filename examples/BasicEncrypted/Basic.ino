@@ -62,7 +62,7 @@ void setup() {
                                  0x7c, 0xa7, 0x1b, 0xc3, 0xb0, 0xac, 0x95, 0x58, 0x68, 0x99, 0xa5, 0x55, 0xbc, 0x5c, 0xf3, 0xde};
     const uint32_t OTA_ADDRESS = 0x10000;  //address for the start of the main code partition.
     
-    wm.setOTAEncryption(OTA_KEY,OTA_ADDRESS);   //make sure to put this line before opening the web portal.  Note the address is in hex
+    wm.setOTAEncryption(OTA_KEY,OTA_ADDRESS);   //require encrypted OTA updates
 
     //*************************************************************************************************************
 
