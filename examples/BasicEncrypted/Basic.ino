@@ -60,8 +60,9 @@ void setup() {
                               //Be sure to change your encryption key to match 
     const uint8_t OTA_KEY[32] = {0x34, 0x15, 0x91, 0xd5, 0x3f, 0xef, 0x29, 0xf3, 0xb3, 0x0c, 0x72, 0xde, 0xff, 0xf7, 0x23, 0x06,
                                  0x7c, 0xa7, 0x1b, 0xc3, 0xb0, 0xac, 0x95, 0x58, 0x68, 0x99, 0xa5, 0x55, 0xbc, 0x5c, 0xf3, 0xde};
-
-    wm.setOTAEncryption(OTA_KEY,0x10000);   //make sure to put this line before opening the web portal.  Note the address is in hex
+    const uint32_t OTA_ADDRESS = 0x10000;  //address for the start of the main code partition.
+    
+    wm.setOTAEncryption(OTA_KEY,OTA_ADDRESS);   //make sure to put this line before opening the web portal.  Note the address is in hex
 
     //*************************************************************************************************************
 
