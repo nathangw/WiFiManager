@@ -3299,7 +3299,8 @@ void WiFiManager::setHttpPort(uint16_t port){
 
 /**
  * setOTAEncryption
- * @param uint18_t 32 byte encryption key, address of code from partition
+ * @param uint18_t 32 byte encryption key
+ * @param uint32_t address of update code from from partition.  decryption needs the exact memory location.
  */
 void WiFiManager::setOTAEncryption(const uint8_t* key, uint32_t address){
   memcpy(_ota_key,key,32);
