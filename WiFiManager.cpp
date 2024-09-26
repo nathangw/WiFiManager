@@ -3966,7 +3966,7 @@ void WiFiManager::handleUpdating(){
     for (int i = 0; i < 32; i++){  //check if the encryption key has been set
       if (_ota_key[i] != 0){
         requirecrypt = true;
-        exit;
+        break;
       }
     }
 
