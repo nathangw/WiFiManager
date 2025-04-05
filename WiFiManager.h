@@ -491,6 +491,9 @@ class WiFiManager
     // set port of webserver, 80
     void          setHttpPort(uint16_t port);
 
+    // set the ota encryption key
+    void          setOTAEncryption(const uint8_t* key, uint32_t address);
+
     // check if config portal is active (true)
     bool          getConfigPortalActive();
     
@@ -694,6 +697,12 @@ protected:
     boolean       configPortalHasTimeout();
     uint8_t       processConfigPortal();
     void          stopCaptivePortal();
+    uint8_t _ota_key[32] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+    uint32_t _ota_address = 0x10000;   //partition address for main program.   usually 0x10000   
+
 	// OTA Update handler
 	void          handleUpdate();
 	void          handleUpdating();
