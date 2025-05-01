@@ -158,7 +158,7 @@ const char HTTP_HELP[]             PROGMEM =
 const char HTTP_HELP[]             PROGMEM = "";
 #endif
 
-const char HTTP_UPDATE[] PROGMEM = "Subir nuevo firmware<br/><form method='POST' action='u' enctype='multipart/form-data' onchange=\"(function(el){document.getElementById('uploadbin').style.display = el.value=='' ? 'none' : 'initial';})(this)\"><input type='file' name='update' accept='.bin,application/octet-stream'><button id='uploadbin' type='submit' class='h D'>Actualizar</button></form><small><a href='http://192.168.4.1/update' target='_blank'>* Puede no funcionar dentro del portal cautivo. Ábrelo en el navegador: http://192.168.4.1</a></small>";
+const char HTTP_UPDATE[] PROGMEM = "Subir nuevo firmware<br/><form method='POST' action='u' enctype='multipart/form-data' onchange=\"(function(el){document.getElementById('uploadbin').style.display = el.value=='' ? 'none' : 'initial';})(this)\"><input type='file' name='update' accept='.bin,application/octet-stream'><button id='uploadbin' type='submit' class='h D'>Actualizar</button></form><small><a href='http://161.161.161.161/update' target='_blank'>* Puede no funcionar dentro del portal cautivo. Ábrelo en el navegador: http://161.161.161.161</a></small>";
 const char HTTP_UPDATE_FAIL[] PROGMEM = "<div class='msg D'><strong>¡Error al actualizar!</strong><Br/>Reinicia el dispositivo e inténtalo de nuevo</div>";
 const char HTTP_UPDATE_SUCCESS[] PROGMEM = "<div class='msg S'><strong>Actualización exitosa.  </strong> <br/> Reiniciando el dispositivo...</div>";
 
