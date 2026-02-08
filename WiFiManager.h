@@ -136,7 +136,15 @@
 // Include wm strings vars
 // Pass in strings env override via WM_STRINGS_FILE
 #ifndef WM_STRINGS_FILE
-#define WM_STRINGS_FILE "wm_strings_en.h" // this includes constants as dependency
+
+#if CUR_LANGUAGE == 1
+  #define WM_STRINGS_FILE "wm_strings_es.h" // this includes constants as dependency
+#elif CUR_LANGUAGE == 0
+  #define WM_STRINGS_FILE "wm_strings_en.h" // this includes constants as dependency
+#else
+  #pragma message ("(WiFiManager.h) NO CUR_LANGUAGE")
+#endif
+
 #endif
 #include WM_STRINGS_FILE
 

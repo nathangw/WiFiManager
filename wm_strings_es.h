@@ -37,13 +37,14 @@ const char HTTP_HEAD_START[]       PROGMEM = "<!DOCTYPE html>"
 "<meta  name='viewport' content='width=device-width,initial-scale=1,user-scalable=no'/>"
 "<title>{v}</title>";
 
-const char HTTP_SCRIPT[]           PROGMEM = "<script>function c(l){"
+const char HTTP_SCRIPT[] PROGMEM = "<script>function c(l){"
 "document.getElementById('s').value=l.getAttribute('data-ssid')||l.innerText||l.textContent;"
 "p = l.nextElementSibling.classList.contains('l');"
 "document.getElementById('p').disabled = !p;"
 "if(p)document.getElementById('p').focus();};"
-"function f() {var x = document.getElementById('p');x.type==='password'?x.type='text':x.type='password';}"
-"</script>"; // @todo add button states, disable on click , show ack , spinner etc
+"function f() {var x = document.getElementById('p'); var cb = document.getElementById('showpass'); x.type = cb.checked ? 'text' : 'password';}"
+"window.addEventListener('load',function(){f();});"
+"</script>";
 
 const char HTTP_HEAD_END[]         PROGMEM = "</head><body class='{c}'><div class='wrap'>"; // {c} = _bodyclass
 // example of embedded logo, base64 encoded inline, No styling here
@@ -51,7 +52,7 @@ const char HTTP_HEAD_END[]         PROGMEM = "</head><body class='{c}'><div clas
 const char HTTP_ROOT_MAIN[]        PROGMEM = "<h1>{t}</h1><h3>{v}</h3>";
 
 const char * const HTTP_PORTAL_MENU[] PROGMEM = {
-"<form action='/wifi'    method='get'><button>Configurar WiFi</button></form><br/>\n", // MENU_WIFI
+"<form action='/wifi'    method='get'><button>Ajustes</button></form><br/>\n", // MENU_WIFI
 "<form action='/0wifi'   method='get'><button>Configurar WiFi (sin escanear)</button></form><br/>\n", // MENU_WIFINOSCAN
 "<form action='/info'    method='get'><button>Información</button></form><br/>\n", // MENU_INFO
 "<form action='/param'   method='get'><button>Configuración</button></form><br/>\n",//MENU_PARAM
@@ -71,7 +72,7 @@ const char HTTP_ITEM[]             PROGMEM = "<div><a href='#p' onclick='c(this)
 // const char HTTP_ITEM[]            PROGMEM = "<div><a href='#p' onclick='c(this)'>{v}</a> {R} {r}% {q} {e}</div>"; // test all tokens
 
 const char HTTP_FORM_START[]       PROGMEM = "<form method='POST' action='{v}'>";
-const char HTTP_FORM_WIFI[]        PROGMEM = "<label for='s'>SSID</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{v}'><br/><label for='p'>Contraseña</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}'><input type='checkbox' onclick='f()'> Mostrar contraseña";
+const char HTTP_FORM_WIFI[]        PROGMEM = "<label for='s'>WiFi (Haz clic en Escanear WiFi abajo para actualizar)</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{v}'><br/><label for='p'>Contraseña WiFi</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}'><input type='checkbox' id='showpass' onclick='f()' checked> Mostrar contraseña<br/>";
 const char HTTP_FORM_WIFI_END[]    PROGMEM = "";
 const char HTTP_FORM_STATIC_HEAD[] PROGMEM = "<hr><br/>";
 const char HTTP_FORM_END[]         PROGMEM = "<br/><br/><button type='submit'>Guardar y Salir</button></form>";
@@ -80,13 +81,13 @@ const char HTTP_FORM_LABEL[]       PROGMEM = "<label for='{i}'>{t}</label>";
 const char HTTP_FORM_PARAM_HEAD[]  PROGMEM = "<hr><br/>";
 const char HTTP_FORM_PARAM[]       PROGMEM = "<br/><input id='{i}' name='{n}' maxlength='{l}' value='{v}' {c}>\n"; // do not remove newline!
 
-const char HTTP_SCAN_LINK[]        PROGMEM = "<br/><form action='/wifi?refresh=1' method='POST'><button name='refresh' value='1'>Actualizar</button></form>";
-const char HTTP_SAVED[]            PROGMEM = "<div class='msg'>Saving Credentials<br/>Trying to connect ESP to network.<br />If it fails reconnect to AP to try again</div>";
-const char HTTP_PARAMSAVED[]       PROGMEM = "<div class='msg S'>Saved<br/></div>";
-const char HTTP_END[]              PROGMEM = "</div></body></html>";
-const char HTTP_ERASEBTN[]         PROGMEM = "<br/><form action='/erase' method='get'><button class='D'>Erase WiFi Config</button></form>";
-const char HTTP_UPDATEBTN[]        PROGMEM = "<br/><form action='/update' method='get'><button>Actualizer</button></form>";
-const char HTTP_BACKBTN[]          PROGMEM = "<hr><br/><form action='/' method='get'><button>Atrás</button></form>";
+const char HTTP_SCAN_LINK[]  PROGMEM = "<br/><form action='/wifi?refresh=1' method='POST'><button name='refresh' value='1'>Escanear WiFi</button></form>";
+const char HTTP_SAVED[]      PROGMEM = "<div class='msg'>Guardando credenciales.<br/><br/>Intentando conectar DeviceAway® para enviar un correo de configuración completada...<br/><br/>Si no recibes el correo o la luz roja empieza a parpadear con un código, realiza la configuración nuevamente.</div>";
+const char HTTP_PARAMSAVED[] PROGMEM = "<div class='msg S'>Guardado<br/></div>";
+const char HTTP_END[]        PROGMEM = "</div></body></html>";
+const char HTTP_ERASEBTN[]   PROGMEM = "<br/><form action='/erase' method='get'><button class='D'>Borrar configuración WiFi</button></form>";
+const char HTTP_UPDATEBTN[]  PROGMEM = "<br/><form action='/update' method='get'><button>Actualizar</button></form>";
+const char HTTP_BACKBTN[]    PROGMEM = "<hr><br/><form action='/' method='get'><button>Atrás</button></form>";
 
 const char HTTP_STATUS_ON[]        PROGMEM = "<div class='msg S'><strong>Conectado</strong> a {v}<br/><em><small>con IP {i}</small></em></div>";
 const char HTTP_STATUS_OFF[]       PROGMEM = "<div class='msg {c}'><strong>No conectado</strong> a {v}{r}</div>"; // {c=class} {v=ssid} {r=status_off}
@@ -129,30 +130,30 @@ const char HTTP_STYLE[]            PROGMEM = "<style>"
 
 #ifndef WM_NOHELP
 const char HTTP_HELP[]             PROGMEM =
- "<br/><h3>Available Pages</h3><hr>"
- "<table class='table'>"
- "<thead><tr><th>Page</th><th>Function</th></tr></thead><tbody>"
- "<tr><td><a href='/'>/</a></td>"
- "<td>Menu page.</td></tr>"
- "<tr><td><a href='/wifi'>/wifi</a></td>"
- "<td>Show WiFi scan results and enter WiFi configuration.(/0wifi noscan)</td></tr>"
- "<tr><td><a href='/wifisave'>/wifisave</a></td>"
- "<td>Save WiFi configuration information and configure device. Needs variables supplied.</td></tr>"
- "<tr><td><a href='/param'>/param</a></td>"
- "<td>Parameter page</td></tr>"
- "<tr><td><a href='/info'>/info</a></td>"
- "<td>Information page</td></tr>"
- "<tr><td><a href='/u'>/u</a></td>"
- "<td>OTA Update</td></tr>"
- "<tr><td><a href='/close'>/close</a></td>"
- "<td>Close the captiveportal popup,configportal will remain active</td></tr>"
- "<tr><td>/exit</td>"
- "<td>Exit Config Portal, configportal will close</td></tr>"
- "<tr><td>/restart</td>"
- "<td>Reboot the device</td></tr>"
- "<tr><td>/erase</td>"
- "<td>Erase WiFi configuration and reboot Device. Device will not reconnect to a network until new WiFi configuration data is entered.</td></tr>"
- "</table>"
+"<br/><h3>Páginas Disponibles</h3><hr>"
+"<table class='table'>"
+"<thead><tr><th>Página</th><th>Función</th></tr></thead><tbody>"
+"<tr><td><a href='/'>/</a></td>"
+"<td>Página del menú.</td></tr>"
+"<tr><td><a href='/wifi'>/wifi</a></td>"
+"<td>Muestra resultados de escaneo WiFi e ingresa configuración WiFi. (/0wifi sin escaneo)</td></tr>"
+"<tr><td><a href='/wifisave'>/wifisave</a></td>"
+"<td>Guarda la configuración WiFi e inicializa el dispositivo. Requiere variables.</td></tr>"
+"<tr><td><a href='/param'>/param</a></td>"
+"<td>Página de parámetros</td></tr>"
+"<tr><td><a href='/info'>/info</a></td>"
+"<td>Página de información</td></tr>"
+"<tr><td><a href='/u'>/u</a></td>"
+"<td>Actualización OTA</td></tr>"
+"<tr><td><a href='/close'>/close</a></td>"
+"<td>Cierra la ventana emergente del portal cautivo, el portal seguirá activo</td></tr>"
+"<tr><td><a href='/exit'>/exit</a></td>"
+"<td>Salir del Portal de Configuración, el portal se cerrará</td></tr>"
+"<tr><td><a href='/restart'>/restart</a></td>"
+"<td>Reinicia el dispositivo</td></tr>"
+"<tr><td><a href='/erase'>/erase</a></td>"
+"<td>Borra la configuración WiFi y reinicia el dispositivo. No se conectará hasta ingresar nueva configuración WiFi.</td></tr>"
+"</table>"
  "<p/>Github <a href='https://github.com/tzapu/WiFiManager'>https://github.com/tzapu/WiFiManager</a>.";
 #else
 const char HTTP_HELP[]             PROGMEM = "";
@@ -185,50 +186,53 @@ const char HTTP_JS[] PROGMEM =
 // Info html
 // @todo remove html elements from progmem, repetetive strings
 #ifdef ESP32
-	const char HTTP_INFO_esphead[]    PROGMEM = "<h3>esp32</h3><hr><dl>";
-	const char HTTP_INFO_chiprev[]    PROGMEM = "<dt>Chip Rev</dt><dd>{1}</dd>";
-  	const char HTTP_INFO_lastreset[]  PROGMEM = "<dt>Last reset reason</dt><dd>CPU0: {1}<br/>CPU1: {2}</dd>";
-  	const char HTTP_INFO_aphost[]     PROGMEM = "<dt>Access Point Hostname</dt><dd>{1}</dd>";
-    const char HTTP_INFO_psrsize[]    PROGMEM = "<dt>PSRAM Size</dt><dd>{1} bytes</dd>";
-	const char HTTP_INFO_temp[]       PROGMEM = "<dt>Temperature</dt><dd>{1} C&deg; / {2} F&deg;</dd><dt>Hall</dt><dd>{3}</dd>";
+    const char HTTP_INFO_esphead[]    PROGMEM = "<h3>esp32</h3><hr><dl>";
+    const char HTTP_INFO_chiprev[]    PROGMEM = "<dt>Revisión del Chip</dt><dd>{1}</dd>";
+    const char HTTP_INFO_lastreset[]  PROGMEM = "<dt>Razón del Último Reinicio</dt><dd>CPU0: {1}<br/>CPU1: {2}</dd>";
+    const char HTTP_INFO_aphost[]     PROGMEM = "<dt>Nombre de Host del Punto de Acceso</dt><dd>{1}</dd>";
+    const char HTTP_INFO_psrsize[]    PROGMEM = "<dt>Tamaño de PSRAM</dt><dd>{1} bytes</dd>";
+    const char HTTP_INFO_temp[]       PROGMEM = "<dt>Temperatura</dt><dd>{1} C&deg; / {2} F&deg;</dd><dt>Campo Magnético (Hall)</dt><dd>{3}</dd>";
 #else
-	const char HTTP_INFO_esphead[]    PROGMEM = "<h3>esp8266</h3><hr><dl>";
-	const char HTTP_INFO_fchipid[]    PROGMEM = "<dt>Flash Chip ID</dt><dd>{1}</dd>";
-	const char HTTP_INFO_corever[]    PROGMEM = "<dt>Core Version</dt><dd>{1}</dd>";
-	const char HTTP_INFO_bootver[]    PROGMEM = "<dt>Boot Version</dt><dd>{1}</dd>";
-	const char HTTP_INFO_lastreset[]  PROGMEM = "<dt>Last reset reason</dt><dd>{1}</dd>";
-	const char HTTP_INFO_flashsize[]  PROGMEM = "<dt>Real Flash Size</dt><dd>{1} bytes</dd>";
+    const char HTTP_INFO_esphead[]    PROGMEM = "<h3>esp8266</h3><hr><dl>";
+    const char HTTP_INFO_fchipid[]    PROGMEM = "<dt>ID del Chip Flash</dt><dd>{1}</dd>";
+    const char HTTP_INFO_corever[]    PROGMEM = "<dt>Versión del Núcleo</dt><dd>{1}</dd>";
+    const char HTTP_INFO_bootver[]    PROGMEM = "<dt>Versión de Arranque</dt><dd>{1}</dd>";
+    const char HTTP_INFO_lastreset[]  PROGMEM = "<dt>Razón del Último Reinicio</dt><dd>{1}</dd>";
+    const char HTTP_INFO_flashsize[]  PROGMEM = "<dt>Tamaño Real de la Flash</dt><dd>{1} bytes</dd>";
 #endif
 
+
 const char HTTP_INFO_memsmeter[]  PROGMEM = "<br/><progress value='{1}' max='{2}'></progress></dd>";
-const char HTTP_INFO_memsketch[]  PROGMEM = "<dt>Memory - Sketch Size</dt><dd>Used / Total bytes<br/>{1} / {2}";
-const char HTTP_INFO_freeheap[]   PROGMEM = "<dt>Memory - Free Heap</dt><dd>{1} bytes available</dd>";
+const char HTTP_INFO_memsketch[]  PROGMEM = "<dt>Memoria - Tamaño del Sketch</dt><dd>Usado / Total de bytes<br/>{1} / {2}";
+const char HTTP_INFO_freeheap[]   PROGMEM = "<dt>Memoria - Heap Libre</dt><dd>{1} bytes disponibles</dd>";
 const char HTTP_INFO_wifihead[]   PROGMEM = "<br/><h3>WiFi</h3><hr>";
-const char HTTP_INFO_uptime[]     PROGMEM = "<dt>Uptime</dt><dd>{1} Mins {2} Secs</dd>";
-const char HTTP_INFO_chipid[]     PROGMEM = "<dt>Chip ID</dt><dd>{1}</dd>";
-const char HTTP_INFO_idesize[]    PROGMEM = "<dt>Flash Size</dt><dd>{1} bytes</dd>";
-const char HTTP_INFO_sdkver[]     PROGMEM = "<dt>SDK Version</dt><dd>{1}</dd>";
-const char HTTP_INFO_cpufreq[]    PROGMEM = "<dt>CPU Frequency</dt><dd>{1}MHz</dd>";
-const char HTTP_INFO_apip[]       PROGMEM = "<dt>Access Point IP</dt><dd>{1}</dd>";
-const char HTTP_INFO_apmac[]      PROGMEM = "<dt>Access Point MAC</dt><dd>{1}</dd>";
-const char HTTP_INFO_apssid[]     PROGMEM = "<dt>Access Point SSID</dt><dd>{1}</dd>";
+const char HTTP_INFO_uptime[]     PROGMEM = "<dt>Tiempo encendido</dt><dd>{1} Min {2} Seg</dd>";
+const char HTTP_INFO_chipid[]     PROGMEM = "<dt>ID del Chip</dt><dd>{1}</dd>";
+const char HTTP_INFO_idesize[]    PROGMEM = "<dt>Tamaño de la Flash</dt><dd>{1} bytes</dd>";
+const char HTTP_INFO_sdkver[]     PROGMEM = "<dt>Versión del SDK</dt><dd>{1}</dd>";
+const char HTTP_INFO_cpufreq[]    PROGMEM = "<dt>Frecuencia de CPU</dt><dd>{1}MHz</dd>";
+const char HTTP_INFO_apip[]       PROGMEM = "<dt>IP del Punto de Acceso</dt><dd>{1}</dd>";
+const char HTTP_INFO_apmac[]      PROGMEM = "<dt>MAC del Punto de Acceso</dt><dd>{1}</dd>";
+const char HTTP_INFO_apssid[]     PROGMEM = "<dt>SSID del Punto de Acceso</dt><dd>{1}</dd>";
 const char HTTP_INFO_apbssid[]    PROGMEM = "<dt>BSSID</dt><dd>{1}</dd>";
-const char HTTP_INFO_stassid[]    PROGMEM = "<dt>Station SSID</dt><dd>{1}</dd>";
-const char HTTP_INFO_staip[]      PROGMEM = "<dt>Station IP</dt><dd>{1}</dd>";
-const char HTTP_INFO_stagw[]      PROGMEM = "<dt>Station Gateway</dt><dd>{1}</dd>";
-const char HTTP_INFO_stasub[]     PROGMEM = "<dt>Station Subnet</dt><dd>{1}</dd>";
-const char HTTP_INFO_dnss[]       PROGMEM = "<dt>DNS Server</dt><dd>{1}</dd>";
-const char HTTP_INFO_host[]       PROGMEM = "<dt>Hostname</dt><dd>{1}</dd>";
-const char HTTP_INFO_stamac[]     PROGMEM = "<dt>Station MAC</dt><dd>{1}</dd>";
-const char HTTP_INFO_conx[]       PROGMEM = "<dt>Connected</dt><dd>{1}</dd>";
-const char HTTP_INFO_autoconx[]   PROGMEM = "<dt>Autoconnect</dt><dd>{1}</dd>";
+const char HTTP_INFO_stassid[]    PROGMEM = "<dt>SSID de Estación</dt><dd>{1}</dd>";
+const char HTTP_INFO_staip[]      PROGMEM = "<dt>IP de Estación</dt><dd>{1}</dd>";
+const char HTTP_INFO_stagw[]      PROGMEM = "<dt>Puerta de Enlace de Estación</dt><dd>{1}</dd>";
+const char HTTP_INFO_stasub[]     PROGMEM = "<dt>Subred de Estación</dt><dd>{1}</dd>";
+const char HTTP_INFO_dnss[]       PROGMEM = "<dt>Servidor DNS</dt><dd>{1}</dd>";
+const char HTTP_INFO_host[]       PROGMEM = "<dt>Nombre de Host</dt><dd>{1}</dd>";
+const char HTTP_INFO_stamac[]     PROGMEM = "<dt>MAC de Estación</dt><dd>{1}</dd>";
+const char HTTP_INFO_conx[]       PROGMEM = "<dt>Conectado</dt><dd>{1}</dd>";
+const char HTTP_INFO_autoconx[]   PROGMEM = "<dt>Autoconectar</dt><dd>{1}</dd>";
+
 
 const char HTTP_INFO_aboutver[]     PROGMEM = "<dt>WiFiManager</dt><dd>{1}</dd>";
 const char HTTP_INFO_aboutarduino[] PROGMEM = "<dt>Arduino</dt><dd>{1}</dd>";
 const char HTTP_INFO_aboutsdk[]     PROGMEM = "<dt>ESP-SDK/IDF</dt><dd>{1}</dd>";
-const char HTTP_INFO_aboutdate[]    PROGMEM = "<dt>Build Date</dt><dd>{1}</dd>";
+const char HTTP_INFO_aboutdate[]    PROGMEM = "<dt>Fecha de Compilación</dt><dd>{1}</dd>";
 
-const char S_brand[]              PROGMEM = "SinMóvil";
+
+const char S_brand[]              PROGMEM = "DeviceAway®";
 const char S_debugPrefix[]        PROGMEM = "*wm:";
 const char S_y[]                  PROGMEM = "Sí";
 const char S_n[]                  PROGMEM = "No";

@@ -29,13 +29,14 @@ const char HTTP_HEAD_START[]       PROGMEM = "<!DOCTYPE html>"
 "<meta  name='viewport' content='width=device-width,initial-scale=1,user-scalable=no'/>"
 "<title>{v}</title>";
 
-const char HTTP_SCRIPT[]           PROGMEM = "<script>function c(l){"
+const char HTTP_SCRIPT[] PROGMEM = "<script>function c(l){"
 "document.getElementById('s').value=l.getAttribute('data-ssid')||l.innerText||l.textContent;"
 "p = l.nextElementSibling.classList.contains('l');"
 "document.getElementById('p').disabled = !p;"
 "if(p)document.getElementById('p').focus();};"
-"function f() {var x = document.getElementById('p');x.type==='password'?x.type='text':x.type='password';}"
-"</script>"; // @todo add button states, disable on click , show ack , spinner etc
+"function f() {var x = document.getElementById('p'); var cb = document.getElementById('showpass'); x.type = cb.checked ? 'text' : 'password';}"
+"window.addEventListener('load',function(){f();});"
+"</script>";
 
 const char HTTP_HEAD_END[]         PROGMEM = "</head><body class='{c}'><div class='wrap'>"; // {c} = _bodyclass
 // example of embedded logo, base64 encoded inline, No styling here
@@ -43,7 +44,7 @@ const char HTTP_HEAD_END[]         PROGMEM = "</head><body class='{c}'><div clas
 const char HTTP_ROOT_MAIN[]        PROGMEM = "<h1>{t}</h1><h3>{v}</h3>";
 
 const char * const HTTP_PORTAL_MENU[] PROGMEM = {
-"<form action='/wifi'    method='get'><button>Configure WiFi</button></form><br/>\n", // MENU_WIFI
+"<form action='/wifi'    method='get'><button>Setup</button></form><br/>\n", // MENU_WIFI
 "<form action='/0wifi'   method='get'><button>Configure WiFi (No scan)</button></form><br/>\n", // MENU_WIFINOSCAN
 "<form action='/info'    method='get'><button>Info</button></form><br/>\n", // MENU_INFO
 "<form action='/param'   method='get'><button>Setup</button></form><br/>\n",//MENU_PARAM
@@ -63,7 +64,7 @@ const char HTTP_ITEM[]             PROGMEM = "<div><a href='#p' onclick='c(this)
 // const char HTTP_ITEM[]            PROGMEM = "<div><a href='#p' onclick='c(this)'>{v}</a> {R} {r}% {q} {e}</div>"; // test all tokens
 
 const char HTTP_FORM_START[]       PROGMEM = "<form method='POST' action='{v}'>";
-const char HTTP_FORM_WIFI[]        PROGMEM = "<label for='s'>SSID</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{v}'><br/><label for='p'>Password</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}'><input type='checkbox' id='showpass' onclick='f()'> <label for='showpass'>Show Password</label><br/>";
+const char HTTP_FORM_WIFI[]        PROGMEM = "<label for='s'>WiFi (Click Scan WiFi Below to Refresh)</label><input id='s' name='s' maxlength='32' autocorrect='off' autocapitalize='none' placeholder='{v}'><br/><label for='p'>WiFi Password</label><input id='p' name='p' maxlength='64' type='password' placeholder='{p}'><input type='checkbox' id='showpass' onclick='f()' checked> <label for='showpass'>Show Password</label><br/>";
 const char HTTP_FORM_WIFI_END[]    PROGMEM = "";
 const char HTTP_FORM_STATIC_HEAD[] PROGMEM = "<hr><br/>";
 const char HTTP_FORM_END[]         PROGMEM = "<br/><br/><button type='submit'>Save & Exit</button></form>";
@@ -71,8 +72,8 @@ const char HTTP_FORM_LABEL[]       PROGMEM = "<label for='{i}'>{t}</label>";
 const char HTTP_FORM_PARAM_HEAD[]  PROGMEM = "<hr><br/>";
 const char HTTP_FORM_PARAM[]       PROGMEM = "<br/><input id='{i}' name='{n}' maxlength='{l}' value='{v}' {c}>\n"; // do not remove newline!
 
-const char HTTP_SCAN_LINK[]        PROGMEM = "<br/><form action='/wifi?refresh=1' method='POST'><button name='refresh' value='1'>Refresh</button></form>";
-const char HTTP_SAVED[]            PROGMEM = "<div class='msg'>Saving Credentials<br/>Trying to connect ESP to network.<br />If it fails reconnect to AP to try again</div>";
+const char HTTP_SCAN_LINK[]        PROGMEM = "<br/><form action='/wifi?refresh=1' method='POST'><button name='refresh' value='1'>Scan WiFi</button></form>";
+const char HTTP_SAVED[]            PROGMEM = "<div class='msg'>Saving Credentials.<br/><br/>Trying to connect DeviceAway® to send a setup complete email...<br/><br/>If you don't get an email or the red light starts blinking a code, do Setup again.</div>";
 const char HTTP_PARAMSAVED[]       PROGMEM = "<div class='msg S'>Saved<br/></div>";
 const char HTTP_END[]              PROGMEM = "</div></body></html>";
 const char HTTP_ERASEBTN[]         PROGMEM = "<br/><form action='/erase' method='get'><button class='D'>Erase WiFi config</button></form>";
@@ -138,11 +139,11 @@ const char HTTP_HELP[]             PROGMEM =
  "<td>OTA Update</td></tr>"
  "<tr><td><a href='/close'>/close</a></td>"
  "<td>Close the captiveportal popup, config portal will remain active</td></tr>"
- "<tr><td>/exit</td>"
+ "<tr><td><a href='/exit'>/exit</a></td>"
  "<td>Exit Config portal, config portal will close</td></tr>"
- "<tr><td>/restart</td>"
+ "<tr><td><a href='/restart'>/restart</a></td>"
  "<td>Reboot the device</td></tr>"
- "<tr><td>/erase</td>"
+ "<tr><td><a href='/erase'>/erase</a></td>"
  "<td>Erase WiFi configuration and reboot device. Device will not reconnect to a network until new WiFi configuration data is entered.</td></tr>"
  "</table>"
  "<p/>Github <a href='https://github.com/tzapu/WiFiManager'>https://github.com/tzapu/WiFiManager</a>.";
@@ -221,7 +222,7 @@ const char HTTP_INFO_aboutarduino[] PROGMEM = "<dt>Arduino</dt><dd>{1}</dd>";
 const char HTTP_INFO_aboutsdk[]     PROGMEM = "<dt>ESP-SDK/IDF</dt><dd>{1}</dd>";
 const char HTTP_INFO_aboutdate[]    PROGMEM = "<dt>Build date</dt><dd>{1}</dd>";
 
-const char S_brand[]              PROGMEM = "DeviceAway";   //Put the product brand name here
+const char S_brand[]              PROGMEM = "DeviceAway®";   //Put the product brand name here
 const char S_debugPrefix[]        PROGMEM = "*wm:";
 const char S_y[]                  PROGMEM = "Yes";
 const char S_n[]                  PROGMEM = "No";
